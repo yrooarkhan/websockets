@@ -55,3 +55,18 @@
   word-wrap: break-word;
   margin-right: 8px;
 }
+
+#users_connected {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  color: rgb(6, 96, 22);
+}
+
+@media only screen and (max-width: 350px) {
+  #users_connected {
+    bottom: 8px;
+    right: 8px;
+    font-size: 12px;
+  }
+}

@@ -34,6 +34,7 @@ button {
 }
 
 button, input, select {
+  color: rgb(0, 0, 0);
   transition: background-color .25s, border-color .25s;
 }
 
@@ -59,4 +60,21 @@ button:hover {
 .wider-block {
   min-width: 400px;
   width: 50% !important;
+}
+
+@media only screen and (max-width: 400px) {
+  .centered-block {
+    flex-direction: column;
+    display: flex;
+    width: 300px;
+    margin: 0 auto;
+  
+    padding: 16px;
+    border: 1px solid rgb(4, 114, 224);
+  }
+
+  .wider-block {
+    min-width: 400px;
+    width: 50% !important;
+  }
 }

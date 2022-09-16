@@ -34,17 +34,14 @@ socket.on('message', ({ username, text, createdAt }) => {
   messageDiv.innerHTML += createMessage({ username, text, createdAt });
 });
 
-document.getElementById('logout').addEventListener('click', () => {
-  window.location.href = `index.html?username=${username}`;
+socket.on('update_users_connected', (usersConnectedInRoom) => {
+  const usersConnectedDiv = document.getElementById('users_connected');
+  usersConnectedDiv.innerHTML = `${usersConnectedInRoom} usuário(s) conectado(s).`;
 });
 
+document.getElementById('logout').addEventListener('click', () => { window.location.href = `index.html?username=${username}` });
 document.getElementById('message_button').addEventListener('click', (event) => emitMessage(event));
-
-document.getElementById('message_input').addEventListener('keypress', (event) => {
-  if (event.key === 'Enter') {
-    emitMessage(event);
-  }
-});
+document.getElementById('message_input').addEventListener('keypress', (event) => event.key === 'Enter' && emitMessage(event));
 
 const emitMessage = (event) => {
   const messageInput = document.getElementById('message_input');

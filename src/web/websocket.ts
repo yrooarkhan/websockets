@@ -8,9 +8,9 @@ import {
 
 const initWebsocket = (io: Server) => {
   io.on('connection', (socket) => {
-    socket.on('select_room', connectUserToRoom(socket));
+    socket.on('select_room', connectUserToRoom(io, socket));
     socket.on('message', broadcastMessageToUsersInTheSameRoom(io));
-    socket.on('disconnect', removeUserFromRoom(socket));
+    socket.on('disconnect', removeUserFromRoom(io, socket));
   });
 };
 
