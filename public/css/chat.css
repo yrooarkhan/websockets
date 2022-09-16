@@ -1,0 +1,57 @@
+#logout {
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.row:has(button#logout) {
+  flex-direction: column;
+}
+
+.row:has(input#message_input) {
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.row:has(input#message_input) input {
+  width: calc(100% - 80px - 16px);
+}
+
+.row:has(input#message_input) button {
+  width: 80px;
+}
+
+#messages {
+  height: 300px;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+  background-color: rgb(241, 241, 241);
+
+  border-radius: 16px 0 0 16px;
+  padding: 8px;
+}
+
+.message-emitter {
+  font-weight: bold;
+}
+
+.message-date {
+  margin-right: 8px;
+  font-style: italic;
+}
+
+.message span {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.message-text {
+  word-wrap: break-word;
+  margin-right: 8px;
+}

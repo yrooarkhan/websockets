@@ -4,32 +4,36 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="./css/index.css" />
+        <link rel="stylesheet" href="./css/style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
         <title>Socket IO</title>
     </head>
 
     <body>
-        <form action="chat.html" onsubmit="true">
-            <div class="container"> 
-                <div class="row">
-                    <select name="select_room" id="select_room">
-                        <option value="-1">Selecione a sala</option>
-                        <option value="node">Node</option>
-                        <option value="java">Java</option>
-                        <option value="reactjs">ReactJS</option>
-                        <option value="elixir">Elixir</option>
-                    </select>
-                </div>
+        <form action="./chat.html" class="centered-block">
+            <div class="row">
+                <select name="select_room" id="select_room" required>
+                    <option value="">Selecione a sala</option>
+                    <option value="node">Node</option>
+                    <option value="java">Java</option>
+                    <option value="reactjs">ReactJS</option>
+                    <option value="elixir">Elixir</option>
+                </select>
             </div>
 
             <div class="row">
-                <label for="username" class="form-label">Digite seu usuário</label>
-                <input type="text" name="username" placeholder="username" />
+                <label for="username">Digite seu nome</label>
+                <input type="text" id="username_input" name="username" placeholder="Nome de usuário" maxlength="10" required />
             </div>
 
             <div class="row">
-                <button type="submit" class="btn btn-primary mb-3">Entrar</button>
+                <button type="submit">Entrar</button>
             </div>
         </form>
     </body>
+
+    <script src="./js/index.js"></script>
 </html>

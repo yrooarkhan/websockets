@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
     callback(messagesInRoom);
   });
 
-  socket.on('message', ({ username, room, message: text }) => {
+  socket.on('message', ({ username, room, message: text }, callback) => {
     const message: Message = {
       createdAt: new Date(),
       username,
@@ -50,6 +50,7 @@ io.on('connection', (socket) => {
     messages.push(message);
     logger.info(`Usuário ${username} enviou na sala ${room}: ${text}`);
     io.to(room).emit('message', message);
+    callback();
   });
 
   socket.on('disconnect', () => {

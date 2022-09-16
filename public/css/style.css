@@ -1,0 +1,62 @@
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  height: 100vh
+}
+
+.row { 
+  width: 100%;
+  margin: 8px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.row:has(button) {
+  justify-content: flex-end;
+}
+
+label {
+  font-size: 14px;
+}
+
+button {
+  width: 20%;
+  height: 26px;
+  border: 1px solid rgb(47, 101, 145);
+  background-color: rgb(255, 255, 255);
+}
+
+button, input, select {
+  transition: background-color .25s, border-color .25s;
+}
+
+input:hover, button:hover, select:hover  {
+  border-color: rgb(67, 142, 204);
+}
+
+button:hover {
+  background-color: rgb(232, 243, 250);
+  cursor: pointer;
+}
+
+.centered-block {
+  flex-direction: column;
+  display: flex;
+  width: 350px;
+  margin: 0 auto;
+
+  padding: 16px;
+  border: 1px solid rgb(4, 114, 224);
+}
+
+.wider-block {
+  min-width: 400px;
+  width: 50% !important;
+}
