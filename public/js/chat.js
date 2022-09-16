@@ -13,6 +13,12 @@ const urlSearch = new URLSearchParams(window.location.search);
 const username = urlSearch.get('username');
 const room = urlSearch.get('select_room');
 
+const validRooms = ['node', 'java', 'reactjs', 'elixir'];
+
+if (!username || !room || !validRooms.includes(room)) {
+  window.location.href = 'index.html';
+}
+
 const usernameDiv = document.getElementById('username_label');
 usernameDiv.innerHTML = `Olá <strong>${username}</strong>, você está na sala <strong>${room}</strong>.`;
 
@@ -42,10 +48,10 @@ document.getElementById('message_input').addEventListener('keypress', (event) =>
 
 const emitMessage = (event) => {
   const messageInput = document.getElementById('message_input');
-  const message = messageInput.value.trim();
+  const text = messageInput.value.trim();
 
-  if (!!message) {
-    socket.emit('message', { room, username, message }, () => {
+  if (!!text) {
+    socket.emit('message', { room, username, text }, () => {
       messageInput.value = '';
       const messages = document.getElementById('messages');
       messages.scroll({ top: messages.scrollHeight, left: 0, behavior: 'smooth' });

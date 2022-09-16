@@ -12,11 +12,11 @@ const logger = createLogger({
   format: combine(timestamp({ format: 'DD/MM/YYYY HH:mm:ss' }), customFormat),
   transports: [
     new transports.File({
-      filename: path.join(__dirname, '..', 'logs', 'all.log'),
+      filename: path.join(__dirname, '..', '..', 'logs', 'all.log'),
     }),
     new transports.File({
       level: 'error',
-      filename: path.join(__dirname, '..', 'logs', 'errors.log'),
+      filename: path.join(__dirname, '..', '..', 'logs', 'errors.log'),
     }),
     new transports.Console(),
   ],
