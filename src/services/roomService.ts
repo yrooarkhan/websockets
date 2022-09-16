@@ -1,8 +1,16 @@
 import { Server, Socket } from 'socket.io';
-import { messages, users } from '../database/tempDatabase';
 import logger from './loggerService';
 import Message from '../database/models/Message';
 import RoomUser from '../database/models/RoomUser';
+
+import {
+  countUsersInRoom,
+  findMessagesFromRoom,
+  findUserBySocketId,
+  removeUserFromItsRoom,
+  persistUser,
+  persistMessage,
+} from '../database/tempDatabase';
 
 import {
   ERRO_ENVIO_MENSAGEM_PARA_DEMAIS_SALAS,
@@ -14,26 +22,11 @@ const connectUserToRoom = (io: Server, socket: Socket) => {
   return (user: RoomUser, callback: (messagesInRoom: Message[]) => void) => {
     try {
       socket.join(user.room);
+      user.socket_id = socket.id;
 
-      const userInRoom: RoomUser = users.find(
-        (userInList) => userInList.username === user.username && userInList.room === user.room
-      );
-
-      if (userInRoom) {
-        logger.info(`Usuário "${user.username}" teve o socket id atualizado.`);
-        userInRoom.socket_id = socket.id;
-      } else {
-        logger.info(`Usuário "${user.username}" conectado na sala "${user.room}".`);
-        user.socket_id = socket.id;
-        users.push(user);
-      }
-
-      const usersConnectedInRoom: number = users.filter(
-        (userInList) => userInList.room === user.room
-      ).length;
-
-      io.to(user.room).emit('update_users_connected', usersConnectedInRoom);
-      callback(getMessagesRoom(user.room));
+      persistUser(user);
+      broadcastTotalUsersConnectedInRoom(io, user.room);
+      callback(findMessagesFromRoom(user.room));
     } catch (errorStack) {
       socket.disconnect();
       logger.error(ERRO_ESTABELECIMENTO_DE_CONEXAO, errorStack);
@@ -44,17 +37,11 @@ const connectUserToRoom = (io: Server, socket: Socket) => {
 const removeUserFromRoom = (io: Server, socket: Socket) => {
   return () => {
     try {
-      const user: RoomUser = users.find((userInList) => userInList.socket_id === socket.id);
+      const user: RoomUser = findUserBySocketId(socket.id);
 
       if (user) {
-        users.splice(users.indexOf(user), 1);
-        logger.info(`Usuário "${user.username}" desconectado da sala "${user.room}".`);
-
-        const usersConnectedInRoom: number = !user
-          ? 0
-          : users.filter((userInList) => userInList.room === user.room).length;
-
-        io.to(user.room).emit('update_users_connected', usersConnectedInRoom);
+        removeUserFromItsRoom(user);
+        broadcastTotalUsersConnectedInRoom(io, user.room);
       }
     } catch (errorStack) {
       logger.error(ERRO_REMOCAO_USUARIO_SALA, errorStack);
@@ -62,15 +49,12 @@ const removeUserFromRoom = (io: Server, socket: Socket) => {
   };
 };
 
-const broadcastMessageToUsersInTheSameRoom = (io: Server) => {
+const persistUserMessage = (io: Server) => {
   return (message: Message, callback: () => void) => {
     try {
       message.createdAt = new Date();
-      messages.push(message);
-      logger.info(
-        `Usuário "${message.username}" enviou "${message.room}", na sala "${message.text}".`
-      );
-      io.to(message.room).emit('message', message);
+      persistMessage(message);
+      broadcastMessageToUsersInTheSameRoom(io, message);
       callback();
     } catch (errorStack) {
       logger.error(ERRO_ENVIO_MENSAGEM_PARA_DEMAIS_SALAS, errorStack);
@@ -78,8 +62,12 @@ const broadcastMessageToUsersInTheSameRoom = (io: Server) => {
   };
 };
 
-const getMessagesRoom = (room: string) => {
-  return messages.filter((message) => message.room === room);
+const broadcastMessageToUsersInTheSameRoom = (io: Server, message: Message) => {
+  io.to(message.room).emit('message', message);
 };
 
-export { connectUserToRoom, removeUserFromRoom, broadcastMessageToUsersInTheSameRoom };
+const broadcastTotalUsersConnectedInRoom = (io: Server, room: string) => {
+  io.to(room).emit('update_users_connected', countUsersInRoom(room));
+};
+
+export { connectUserToRoom, removeUserFromRoom, persistUserMessage };

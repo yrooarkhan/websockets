@@ -1,7 +1,7 @@
 import { Server } from 'socket.io';
 
 import {
-  broadcastMessageToUsersInTheSameRoom,
+  persistUserMessage,
   connectUserToRoom,
   removeUserFromRoom,
 } from '../services/roomService';
@@ -9,7 +9,7 @@ import {
 const initWebsocket = (io: Server) => {
   io.on('connection', (socket) => {
     socket.on('select_room', connectUserToRoom(io, socket));
-    socket.on('message', broadcastMessageToUsersInTheSameRoom(io));
+    socket.on('message', persistUserMessage(io));
     socket.on('disconnect', removeUserFromRoom(io, socket));
   });
 };
